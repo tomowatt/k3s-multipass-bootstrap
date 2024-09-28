@@ -16,7 +16,7 @@ users:
   groups: sudo
   sudo: ALL=(ALL) NOPASSWD:ALL
   ssh_authorized_keys: 
-  - $(cat "$PUBLIC_SSH_KEY_PATH")
+  - $(cat "${PUBLIC_SSH_KEY_PATH}")
 EOF
 }
 
@@ -25,12 +25,12 @@ getNodeIP() {
 }
 
 installK3sMasterNode() {
-    MASTER_IP=$(getNodeIP $1)
-    k3sup install --ip "$MASTER_IP" --context "$context" --user "$USER" --ssh-key  "${PRIVATE_SSH_KEY_PATH}"
+    MASTER_IP=$(getNodeIP "$1")
+    k3sup install --ip "$MASTER_IP" --context "$context" --user "$USER" --ssh-key "${PRIVATE_SSH_KEY_PATH}"
 }
 
 installK3sWorkerNode() {
-    NODE_IP=$(getNodeIP $1)
+    NODE_IP=$(getNodeIP "$1")
     k3sup join --server-ip "$MASTER_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${PRIVATE_SSH_KEY_PATH}"
 }
 
