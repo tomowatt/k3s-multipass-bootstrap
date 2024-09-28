@@ -4,7 +4,7 @@ master="master"
 nodes=("node1" "node2")
 context="k3s-cluster"
 
-createInstance () {
+createInstance() {
     multipass launch -n "$1" --cloud-init - <<EOF
 users:
 - name: ${USER}
@@ -31,14 +31,12 @@ installK3sWorkerNode() {
 
 createInstance $master
 
-for node in "${nodes[@]}"
-do
+for node in "${nodes[@]}"; do
     createInstance "$node"
 done
 
 installK3sMasterNode $master
 
-for node in "${nodes[@]}"
-do
+for node in "${nodes[@]}"; do
     installK3sWorkerNode "$node"
 done
