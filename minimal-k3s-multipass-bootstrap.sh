@@ -26,7 +26,7 @@ EOF
 }
 
 getNodeIP() {
-    echo $(multipass list | grep $1 | awk '{print $3}')
+    multipass list | grep "$1" | awk '{print $3}'
 }
 
 installK3sMasterNode() {
