@@ -2,6 +2,11 @@
 
 set -eo pipefail
 
+if "${DEBUG}"; then
+    set -x
+    set +e
+fi
+
 master="master"
 nodes=("node1" "node2")
 context="k3s-cluster"
