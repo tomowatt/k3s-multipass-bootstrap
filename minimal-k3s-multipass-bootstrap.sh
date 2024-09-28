@@ -7,7 +7,7 @@ if "${DEBUG}"; then
     set +e
 fi
 
-master="master"
+primary="primary"
 nodes=("node1" "node2")
 context="k3s-cluster"
 
@@ -29,24 +29,24 @@ getNodeIP() {
     multipass list | grep "$1" | awk '{print $3}'
 }
 
-installK3sMasterNode() {
-    MASTER_IP=$(getNodeIP "$1")
-    k3sup install --ip "$MASTER_IP" --context "$context" --user "$USER" --ssh-key "${private_key}"
+installK3sPrimaryNode() {
+    PRIMARY_IP=$(getNodeIP "$1")
+    k3sup install --ip "$PRIMARY_IP" --context "$context" --user "$USER" --ssh-key "${private_key}"
 }
 
-installK3sWorkerNode() {
+joinK3sNode() {
     NODE_IP=$(getNodeIP "$1")
-    k3sup join --server-ip "$MASTER_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${private_key}"
+    k3sup join --server-ip "$PRIMARY_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${private_key}"
 }
 
-createInstance $master
+createInstance $primary
 
 for node in "${nodes[@]}"; do
     createInstance "$node"
 done
 
-installK3sMasterNode $master
+installK3sPrimaryNode $primary
 
 for node in "${nodes[@]}"; do
-    installK3sWorkerNode "$node"
+    joinK3sNode "$node"
 done
