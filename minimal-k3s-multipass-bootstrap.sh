@@ -11,8 +11,8 @@ master="master"
 nodes=("node1" "node2")
 context="k3s-cluster"
 
-"${PUBLIC_SSH_KEY_PATH:?PUBLIC_SSH_KEY_PATH is not set or null}"
-"${PRIVATE_SSH_KEY_PATH:?PRIVATE_SSH_KEY_PATH is not set or null}"
+public_key="${PUBLIC_SSH_KEY_PATH:?PUBLIC_SSH_KEY_PATH is not set or null}"
+private_key="${PRIVATE_SSH_KEY_PATH:?PRIVATE_SSH_KEY_PATH is not set or null}"
 
 createInstance() {
     multipass launch -n "$1" --cloud-init - <<EOF
@@ -21,7 +21,7 @@ users:
   groups: sudo
   sudo: ALL=(ALL) NOPASSWD:ALL
   ssh_authorized_keys: 
-  - $(cat "${PUBLIC_SSH_KEY_PATH}")
+  - $(cat "${public_key}")
 EOF
 }
 
@@ -31,12 +31,12 @@ getNodeIP() {
 
 installK3sMasterNode() {
     MASTER_IP=$(getNodeIP "$1")
-    k3sup install --ip "$MASTER_IP" --context "$context" --user "$USER" --ssh-key "${PRIVATE_SSH_KEY_PATH}"
+    k3sup install --ip "$MASTER_IP" --context "$context" --user "$USER" --ssh-key "${private_key}"
 }
 
 installK3sWorkerNode() {
     NODE_IP=$(getNodeIP "$1")
-    k3sup join --server-ip "$MASTER_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${PRIVATE_SSH_KEY_PATH}"
+    k3sup join --server-ip "$MASTER_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${private_key}"
 }
 
 createInstance $master
