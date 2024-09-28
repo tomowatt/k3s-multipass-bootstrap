@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 master="master"
 nodes=("node1" "node2")
