@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-if "${DEBUG}"; then
+if [ -z "${DEBUG}" ]; then
     set -x
     set +e
 fi
