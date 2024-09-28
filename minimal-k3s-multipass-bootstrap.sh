@@ -1,8 +1,13 @@
 #!/bin/bash
 
+set -eo pipefail
+
 master="master"
 nodes=("node1" "node2")
 context="k3s-cluster"
+
+"${PUBLIC_SSH_KEY_PATH:?PUBLIC_SSH_KEY_PATH is not set or null}"
+"${PRIVATE_SSH_KEY_PATH:?PRIVATE_SSH_KEY_PATH is not set or null}"
 
 createInstance() {
     multipass launch -n "$1" --cloud-init - <<EOF
