@@ -7,6 +7,17 @@ if [ -n "${DEBUG}" ]; then
     set +e
 fi
 
+function check_dependencies() {
+    local dependencies=("multipass" "k3sup")
+    for dep in "${dependencies[@]}"; do
+        if ! command -v "$dep" &>/dev/null; then
+            echo "Error: $dep is not installed." >&2
+            exit 1
+        fi
+    done
+}   
+
+
 primary="primary"
 nodes=("node1" "node2")
 context="k3s-cluster"
