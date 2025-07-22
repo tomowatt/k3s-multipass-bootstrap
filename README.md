@@ -2,21 +2,29 @@
 
 A quick and easy way to setup a local k3s Cluster using k3sup & Multipass.
 
-Requires the following to be installed:
+## Prerequisites
 
-* [k3sup](https://github.com/alexellis/k3sup)
-* [Multipass](https://multipass.run)
+- [k3sup](https://github.com/alexellis/k3sup)
+- [Multipass](https://multipass.run)
+- SSH key pair (generate with `ssh-keygen -t ed25519 -f demo-key`)
 
-Requires two Environment Variables:
-`PUBLIC_SSH_KEY_PATH` - File Path to Public SSH Key for Multipass Instances
-`PRIVATE_SSH_KEY_PATH` - File Path to Private SSH Key for Multipass Instances
+## Usage
 
-Example:
+```sh
+export PUBLIC_SSH_KEY_PATH=./demo-key.pub
+export PRIVATE_SSH_KEY_PATH=./demo-key
+./minimal-k3s-multipass-bootstrap.sh create
+```
 
-`PUBLIC_SSH_KEY_PATH=./demo-key.pub PRIVATE_SSH_KEY_PATH=./demo-key ./minimal-k3s-multipass-bootstrap.sh`
+The generated `kubeconfig` will be saved in the current directory.
 
-The `kubeconfig` will be stored in the directory from where the script is ran.
+## Cleanup
 
-Clearing the VM Instances:
+```sh
+./minimal-k3s-multipass-bootstrap.sh delete
+```
 
-`multipass delete --all && multipass purge`
+## Troubleshooting
+
+- Ensure `multipass` and `k3sup` are installed and in your PATH.
+- If you see permission errors, check your SSH key permissions.
