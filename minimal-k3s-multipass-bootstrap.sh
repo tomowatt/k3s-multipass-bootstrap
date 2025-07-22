@@ -17,6 +17,8 @@ function check_dependencies() {
     done
 }   
 
+function create_nodes() {
+    check_dependencies
 
 primary="primary"
 nodes=("node1" "node2")
@@ -25,7 +27,7 @@ context="k3s-cluster"
 public_key="${PUBLIC_SSH_KEY_PATH:?PUBLIC_SSH_KEY_PATH is not set or null}"
 private_key="${PRIVATE_SSH_KEY_PATH:?PRIVATE_SSH_KEY_PATH is not set or null}"
 
-createInstance() {
+    function createInstance() {
     multipass launch -n "$1" --cloud-init - <<EOF
 users:
 - name: ${USER}
@@ -50,14 +52,16 @@ joinK3sNode() {
     k3sup join --server-ip "$PRIMARY_IP" --ip "$NODE_IP" --user "$USER" --ssh-key "${private_key}"
 }
 
-createInstance $primary
+    createInstance "$primary"
 
 for node in "${nodes[@]}"; do
     createInstance "$node"
 done
 
-installK3sPrimaryNode $primary
+    installK3sPrimaryNode "$primary"
 
 for node in "${nodes[@]}"; do
     joinK3sNode "$node"
 done
+}
+
